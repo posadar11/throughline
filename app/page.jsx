@@ -125,8 +125,8 @@ function criteriaBlock() {
   return SEAT.criteria.map((c) => `- ${c.name}: ${c.def}`).join("\n");
 }
 
-async function callClaude(system, messages) {
-  const res = await fetch("/api/claude", {
+async function callModel(system, messages) {
+  const res = await fetch("/api/assess", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ system, messages }),
@@ -322,7 +322,7 @@ Include all seven dimensions. Include 3 to 5 items in each list.`;
     }
     try {
       setBusyLabel("Reading the answer");
-      const text = await callClaude(probeSystem(), [
+      const text = await callModel(probeSystem(), [
         { role: "user", content: `Transcript so far:\n\n${transcriptToText(working)}\n\nProduce the trace and the next question.` },
       ]);
       const parsed = parseJSON(text);
@@ -334,7 +334,7 @@ Include all seven dimensions. Include 3 to 5 items in each list.`;
 
       if (mode !== "self") {
         setBusyLabel("Candidate responding");
-        const reply = await callClaude(candidateSystem(CANDIDATES[mode].persona), [
+        const reply = await callModel(candidateSystem(CANDIDATES[mode].persona), [
           { role: "user", content: `Transcript so far:\n\n${transcriptToText(updated)}\n\nAnswer the interviewer's latest question, in character.` },
         ]);
         setThread([...updated, { role: "answer", text: toProse(reply) }]);
@@ -352,7 +352,7 @@ Include all seven dimensions. Include 3 to 5 items in each list.`;
     setBusy(true);
     setBusyLabel("Assembling the reasoning profile");
     try {
-      const raw = await callClaude(profileSystem(), [
+      const raw = await callModel(profileSystem(), [
         { role: "user", content: `Full transcript:\n\n${transcriptToText(thread)}\n\nProduce the reasoning profile.` },
       ]);
       setProfile(parseJSON(raw));

@@ -36,7 +36,7 @@ Built behind Rawls's veil of ignorance: every judgment the engine makes must hol
 ## Project structure
 
 - `app/page.jsx` — the interface and the reasoning logic (dimensions, bench, adaptive loop, profile)
-- `app/api/claude/route.js` — server-side proxy to the OpenAI API; validates and repairs the model's JSON
+- `app/api/assess/route.js` — server-side proxy to the OpenAI API; validates and repairs the model's JSON
 - `app/layout.jsx` — root layout
 
 Built for the KPMG AI Builder case study. Assessment use only; synthetic candidates throughout.
