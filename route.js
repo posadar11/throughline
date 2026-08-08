@@ -1,22 +1,25 @@
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
 async function call(system, messages, max_tokens) {
-  return fetch(ANTHROPIC_URL, {
+  return fetch(OPENAI_URL, {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "x-api-key": process.env.ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01",
+      authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
     },
-    body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens, system, messages }),
+    body: JSON.stringify({
+      model: "gpt-4o",
+      max_tokens,
+      messages: [{ role: "system", content: system }, ...messages],
+    }),
   });
 }
 
 function extractText(data) {
-  return (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n");
+  return data.choices?.[0]?.message?.content ?? "";
 }
 
 function cleanToJSON(t) {
@@ -30,8 +33,8 @@ function cleanToJSON(t) {
 
 export async function POST(req) {
   try {
-    if (!process.env.ANTHROPIC_API_KEY) {
-      return Response.json({ content: [{ type: "text", text: '{"error":"ANTHROPIC_API_KEY is not set"}' }] }, { status: 200 });
+    if (!process.env.OPENAI_API_KEY) {
+      return Response.json({ content: [{ type: "text", text: '{"error":"OPENAI_API_KEY is not set"}' }] }, { status: 200 });
     }
     const { system, messages } = await req.json();
 
@@ -39,7 +42,7 @@ export async function POST(req) {
     const data = await r.json();
 
     if (!r.ok) {
-      // Surface Anthropic's error in a shape the client can read without crashing.
+      // Surface OpenAI's error in a shape the client can read without crashing.
       return Response.json({ content: [{ type: "text", text: JSON.stringify({ error: data.error || data }) }] }, { status: 200 });
     }
 

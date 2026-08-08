@@ -114,7 +114,6 @@ const CANDIDATES = {
 };
 
 const MAX_PROBES = 2;
-const MODEL = "claude-sonnet-4-20250514";
 
 const STRENGTH = {
   strong: { label: "Strong evidence", color: "var(--ok)" },

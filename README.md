@@ -21,7 +21,7 @@ Built behind Rawls's veil of ignorance: every judgment the engine makes must hol
 ## Stack
 
 - React with the Next.js App Router
-- Claude (Anthropic API), accessed through a server-side route so no API key is ever exposed in the browser
+- GPT-4o (OpenAI API), accessed through a server-side route so no API key is ever exposed in the browser
 - Deployed on Vercel
 - Synthetic data only
 
@@ -29,14 +29,14 @@ Built behind Rawls's veil of ignorance: every judgment the engine makes must hol
 
 1. `npm install`
 2. Create a file named `.env.local` and add your key:
-   `ANTHROPIC_API_KEY=your-key-here`
+   `OPENAI_API_KEY=your-key-here`
 3. `npm run dev`
 4. Open `http://localhost:3000`
 
 ## Project structure
 
 - `app/page.jsx` — the interface and the reasoning logic (dimensions, bench, adaptive loop, profile)
-- `app/api/claude/route.js` — server-side proxy to the Anthropic API; validates and repairs the model's JSON
+- `app/api/claude/route.js` — server-side proxy to the OpenAI API; validates and repairs the model's JSON
 - `app/layout.jsx` — root layout
 
 Built for the KPMG AI Builder case study. Assessment use only; synthetic candidates throughout.
